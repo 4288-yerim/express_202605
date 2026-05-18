@@ -24,6 +24,21 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
+         <div>
+            <label>학번 : <input v-model="info.stuNo"></label>
+         </div>
+         <div>
+            <label>이름 : <input v-model="info.stuName"></label>
+         </div>
+         <div>
+            <label>학과 : <input v-model="info.stuDept"></label>
+         </div>
+         <div>
+            <label>학년 : <input v-model="info.stuGrade"></label>
+         </div>
+         <div>
+            <button @click="fnAdd">등록</button>
+         </div>
     </div>
 </body>
 </html>
@@ -33,16 +48,29 @@
         data() {
             return {
                 // 변수 - (key : value)
+                info : {
+                    stuNo : "",
+                    stuName : "",
+                    stuDept : "",
+                    stuGrade : ""
+                }
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnList: function () {
+            fnAdd: function () {
                 let self = this;
-                fetch("")
+                fetch("http://localhost:3000/student", {
+                    method : "POST",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    body : JSON.stringify(self.info)
+                })
                     .then(res => res.json())
                     .then(data => {
-
+                        alert("등록되었습니다!");
+                        location.href = "stu-list.html";
                     })
             }
         }, // methods

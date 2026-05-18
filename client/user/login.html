@@ -24,6 +24,15 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
+        <div>
+            <label>아이디 : <input v-model="info.userid"></label>
+        </div>
+        <div>
+            <label>비밀번호 : <input v-model="info.pwd"></label>
+        </div>
+        <div>
+            <button @click="fnLogin">로그인</button>
+        </div>
     </div>
 </body>
 </html>
@@ -33,16 +42,29 @@
         data() {
             return {
                 // 변수 - (key : value)
+                info : {
+                    userid : "",
+                    pwd : ""
+                }
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnList: function () {
+            fnLogin: function () {
                 let self = this;
-                fetch("")
+                fetch("http://localhost:3000/login?userId=" + self.info.userid + "&pwd=" + self.info.pwd, {
+                    method : "GET",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
                     .then(res => res.json())
                     .then(data => {
-
+                        if(data.result == "success"){
+                            location.href = "../student/stu-list.html";
+                        } else {
+                            alert("로그인 실패!");
+                        }
                     })
             }
         }, // methods
