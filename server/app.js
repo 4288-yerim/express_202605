@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const oracledb = require('oracledb');
+var QRcode = require('qrcode');
+
+// router
 const studentRouter = require("./routes/student");
 const userRouter = require("./routes/user");
 const boardRouter = require("./routes/board");
@@ -38,6 +41,18 @@ async function startServer() {
   }
 }
 
+app.get("/qrcode", async (req, res) => {
+  try {
+    let qrImg = await QRcode.toDataURL("https://github.com/4288-yerim");
+    res.send(
+      `
+      <img src=${qrImg}>
+      `
+    )
+  } catch (err) {
+    console.log(err);
+  }
+})
 startServer();
 
 // user
