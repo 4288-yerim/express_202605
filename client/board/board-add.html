@@ -24,15 +24,22 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
+        <select v-model="info.kind">
+            <option :value="1">공지사항</option>
+            <option :value="2">자유게시판</option>
+            <option :value="3">질문게시판</option>
+        </select>
         <div>
-            <label>아이디 : <input v-model="info.userid" @keyup.enter="fnLogin"></label>
+           <label>작성자 : <input v-model="info.userId" ></label>
         </div>
         <div>
-            <label>비밀번호 : <input v-model="info.pwd" @keyup.enter="fnLogin"></label>
+           <label>제목 : <input v-model="info.title" ></label>
         </div>
         <div>
-            <button @click="fnLogin">로그인</button>
-            <button @click="fnJoin">회원가입</button>
+           <label>작성글 : <input v-model="info.contents" ></label>
+        </div>
+        <div>
+          <button @click="fnAdd">등록</button>
         </div>
     </div>
 </body>
@@ -44,42 +51,41 @@
             return {
                 // 변수 - (key : value)
                 info : {
-                    userid : "",
-                    pwd : ""
-                }
+                    userId : "",
+                    title : "",
+                    contents : "",
+                    kind : "2"
+                },
+                
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogin: function () {
+            fnAdd: function () {
                 let self = this;
-                fetch("http://localhost:3000/user/login", {
-                    method : "POST",
-                    headers : {
-                        "Content-Type" : "application/json"
+                fetch("http://localhost:3000/board", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
                     },
-                    body : JSON.stringify({
-                        userId : self.info.userid,
-                        pwd : self.info.pwd
-                    })
+                    body: JSON.stringify(self.info)
                 })
                     .then(res => res.json())
                     .then(data => {
-                        if(data.result == "success"){
-                            alert(data.info.userName + "님, 환영합니다!");
-                            location.href = "../student/stu-list.html";
-                        } else {
-                            alert("아이디/비밀번호 확인하셈");
-                        }
+                        alert("등록됨!");
+                        location.href = "board-list.html";
                     })
-            },
-            fnJoin: function () {
-                location.href = "join.html";
+                    .catch(err => {
+                        console.error(err);
+                    });
             }
         }, // methods
         mounted() {
             // 처음 시작할 때 실행되는 부분
-            let self = this;
+        let self = this;
+        const queryParams = new URLSearchParams(window.location.search);
+        self.boardNo = queryParams.get('boardNo') || '';
+        self.fnGetInfo();
         }
     });
 

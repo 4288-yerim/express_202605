@@ -25,13 +25,15 @@
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
-            <label>아이디 : <input v-model="info.userid" @keyup.enter="fnLogin"></label>
+            <label>아이디 : <input v-model="info.userid"></label>
         </div>
         <div>
-            <label>비밀번호 : <input v-model="info.pwd" @keyup.enter="fnLogin"></label>
+            <label>비밀번호 : <input v-model="info.pwd"></label>
         </div>
         <div>
-            <button @click="fnLogin">로그인</button>
+            <label>이름 : <input v-model="info.userName"></label>
+        </div>
+        <div>
             <button @click="fnJoin">회원가입</button>
         </div>
     </div>
@@ -45,36 +47,36 @@
                 // 변수 - (key : value)
                 info : {
                     userid : "",
-                    pwd : ""
+                    pwd : "",
+                    userName : ""
                 }
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogin: function () {
+            fnJoin: function () {
                 let self = this;
-                fetch("http://localhost:3000/user/login", {
+                fetch("http://localhost:3000/user/join", {
                     method : "POST",
                     headers : {
                         "Content-Type" : "application/json"
                     },
                     body : JSON.stringify({
                         userId : self.info.userid,
-                        pwd : self.info.pwd
+                        pwd : self.info.pwd,
+                        userName : self.info.userName
                     })
                 })
                     .then(res => res.json())
                     .then(data => {
+                        console.log(data);
                         if(data.result == "success"){
-                            alert(data.info.userName + "님, 환영합니다!");
-                            location.href = "../student/stu-list.html";
+                            alert("회원가입 성공!");
+                            location.href = "login.html";
                         } else {
-                            alert("아이디/비밀번호 확인하셈");
+                            alert("회원가입 실패!");
                         }
                     })
-            },
-            fnJoin: function () {
-                location.href = "join.html";
             }
         }, // methods
         mounted() {
