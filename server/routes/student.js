@@ -3,14 +3,18 @@ const oracledb = require('oracledb');
 const db = require("../db");
 const router = express.Router();
 
-
 router.get('/', async (req, res) => {
-  const { } = req.query;
+  const { keyword } = req.query;
+  let connection 
   try {
-    let connection = await db.getConnection();
+    
+    connection = await db.getConnection();
     const result = await connection.execute(
-      `SELECT * FROM STUDENT`,
-      [],
+      `
+      SELECT * FROM STUDENT
+      WHERE STU_NAME LIKE '%' || :keyword || '%'
+      `,
+      [keyword],
       {outFormat : oracledb.OUT_FORMAT_OBJECT}
     );
 
@@ -21,6 +25,8 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error executing query', error);
     res.status(500).send('Error executing query');
+  } finally {
+    await connection.close();
   }
 });
 

@@ -63,4 +63,34 @@ router.post('/join', async (req, res) => {
   }
 });
 
+router.post('/checkId', async (req, res) => {
+  const { userId } = req.body;
+  try {
+    let connection = await db.getConnection();
+    const result = await connection.execute(
+      `SELECT * FROM TBL_USER WHERE USERID = :userId`,
+      [userId],
+      {outFormat : oracledb.OUT_FORMAT_OBJECT}
+    );
+    let message = "";
+    let info = {};
+    let r = false;
+    if(result.rows.length > 0) {
+      message = "success";
+    } else {
+      message = "fail";
+      r = true;
+    }
+
+
+    res.json({
+        result : r,
+        info : info,
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
 module.exports = router;

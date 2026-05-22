@@ -8,6 +8,7 @@ var QRcode = require('qrcode');
 const studentRouter = require("./routes/student");
 const userRouter = require("./routes/user");
 const boardRouter = require("./routes/board");
+const productRouter = require("./routes/product");
 const db = require("./db");
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use("/student", studentRouter);
 app.use("/user", userRouter);
 app.use("/board", boardRouter);
+app.use("/product", productRouter);
 
 // Oracle 데이터베이스와 연결을 유지하기 위한 전역 변수
 let connection;
@@ -31,8 +33,8 @@ async function startServer() {
     await db.init();
     console.log('Successfully connected to Oracle database');
 
-    app.listen(3000, () => {
-      console.log('Server is running on port 3000');
+    app.listen(3010, () => {
+      console.log('Server is running on port 3010');
     });
 
   } catch (err) {
